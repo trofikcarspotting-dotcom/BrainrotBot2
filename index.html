@@ -2,23 +2,353 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brainrot Cases</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;color:#fff;font-family:Arial;text-align:center;background:radial-gradient(circle at 20% 20%,#7c3aed,transparent 30%),radial-gradient(circle at 80% 70%,#ec4899,transparent 30%),linear-gradient(135deg,#08000f,#18002d,#030006)}
-h1{font-size:40px;margin:35px 0 8px;text-shadow:0 0 25px #a855f7}
+
+body{
+margin:0;
+min-height:100vh;
+font-family:Arial,sans-serif;
+color:white;
+text-align:center;
+background:
+radial-gradient(circle at 20% 20%,#7c3aed,transparent 30%),
+radial-gradient(circle at 80% 70%,#ec4899,transparent 30%),
+linear-gradient(135deg,#08000f,#18002d,#030006);
+}
+
+h1{
+margin:35px 0 5px;
+font-size:40px;
+text-shadow:0 0 25px #a855f7;
+}
+
 .sub{color:#c4b5fd}
-.bal{display:inline-block;margin:20px;padding:12px 25px;border-radius:30px;background:#ffffff15;border:1px solid #ffffff30;font-size:20px}
+
+.balance{
+display:inline-block;
+margin:20px;
+padding:12px 25px;
+border-radius:30px;
+background:#ffffff15;
+font-size:20px;
+}
+
 .coin{color:#facc15}
-.cases{display:flex;justify-content:center;gap:25px;flex-wrap:wrap;padding:15px}
-.case{width:290px;padding:25px;border-radius:25px;background:#ffffff12;border:1px solid #ffffff30;box-shadow:0 15px 50px #0008}
-.icon{font-size:80px}
+
+.cases{
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
+padding:15px;
+}
+
+.case{
+width:290px;
+padding:25px;
+border-radius:25px;
+background:#ffffff12;
+border:1px solid #ffffff30;
+box-shadow:0 15px 50px #0008;
+}
+
+.icon{font-size:75px}
+
 .case p{color:#c4b5fd}
-button{border:0;border-radius:14px;padding:14px 20px;color:#fff;font-size:16px;font-weight:bold;cursor:pointer}
-.open{width:100%;background:linear-gradient(90deg,#7c3aed,#ec4899)}
-.modal{display:none;position:fixed;inset:0;background:#000c;align-items:center;justify-content:center;padding:15px}
-.modal.show{display:flex}
-.win{width:100%;max-width:850px;padding:25px;border-radius:25px;background:#140021;border:1px solid #ffffff30}
-.roll{height:145px;overflow:hidden;position:relative;background:#030006;border:2px solid #ffffff25;border-radius:18px}
+
+button{
+border:0;
+border-radius:14px;
+padding:14px 20px;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.open{
+width:100%;
+background:linear-gradient(90deg,#7c3aed,#ec4899);
+}
+
+#modal{
+display:none;
+position:fixed;
+inset:0;
+background:#000c;
+align-items:center;
+justify-content:center;
+padding:15px;
+}
+
+#modal.show{display:flex}
+
+.window{
+width:100%;
+max-width:850px;
+padding:25px;
+border-radius:25px;
+background:#140021;
+}
+
+.roulette{
+height:145px;
+overflow:hidden;
+position:relative;
+background:#030006;
+border:2px solid #ffffff25;
+border-radius:18px;
+}
+
 .pointer{
+position:absolute;
+z-index:5;
+left:50%;
+top:0;
+bottom:0;
+width:4px;
+background:#facc15;
+}
+
+.items{
+height:100%;
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px;
+}
+
+.item{
+flex:0 0 130px;
+height:120px;
+border-radius:15px;
+background:#32104d;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+
+.item b{font-size:40px}
+.item small{font-size:12px}
+.item em{
+color:#facc15;
+font-style:normal;
+}
+
+.result{
+display:none;
+margin:20px;
+padding:15px;
+background:#ffffff10;
+border-radius:18px;
+}
+
+.result.show{display:block}
+
+.winicon{font-size:70px}
+.winname{
+font-size:24px;
+font-weight:bold;
+}
+
+.close{
+background:#ffffff20;
+margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧠 BRAINROT CASES</h1>
+
+<div class="sub">
+Открывай кейсы и собирай Brainrot!
+</div>
+
+<div class="balance">
+🪙 <span class="coin" id="balance">100</span> монет
+</div>
+
+<div class="cases">
+
+<div class="case">
+<div class="icon">🌮</div>
+<h2>Кейс Кетчура</h2>
+<p>Цена: 🪙 35</p>
+<button class="open" onclick="openCase('ket')">
+ОТКРЫТЬ ЗА 35 🪙
+</button>
+</div>
+
+<div class="case">
+<div class="icon">🐉</div>
+<h2>Кейс Гарама</h2>
+<p>Цена: 🪙 50</p>
+<button class="open" onclick="openCase('gar')">
+ОТКРЫТЬ ЗА 50 🪙
+</button>
+</div>
+
+</div>
+
+<div id="modal">
+
+<div class="window">
+
+<h2 id="caseTitle"></h2>
+
+<div class="roulette">
+<div class="pointer"></div>
+<div class="items" id="items"></div>
+</div>
+
+<div class="result" id="result">
+<div class="winicon" id="winIcon"></div>
+<div class="winname" id="winName"></div>
+<p id="winPrice"></p>
+</div>
+
+<button class="close" onclick="closeCase()">
+ЗАКРЫТЬ
+</button>
+
+</div>
+</div>
+
+<script>
+
+let coins=100;
+
+const cases={
+
+ket:{
+name:"🌮 Кейс Кетчура",
+price:35,
+items:[
+["Ла Тако Комбинация","🌮",20,70],
+["Тако Брейнрот","🌮",40,20],
+["Золотой Тако","✨🌮",100,9],
+["Мифический Тако","👑🌮",250,1]
+]
+},
+
+gar:{
+name:"🐉 Кейс Гарама",
+price:50,
+items:[
+["Ла Тако Комбинация","🌮",20,55],
+["Гарама Чипс","🍟",25,30],
+["Золотой Гарама","✨",100,14],
+["Драгон Канелони","🐉🍝",500,1]
+]
+}
+
+};
+
+function updateCoins(){
+document.getElementById("balance").textContent=coins;
+}
+
+function randomItem(list){
+
+let number=Math.random()*100;
+
+for(let item of list){
+number-=item[3];
+
+if(number<=0){
+return item;
+}
+}
+
+return list[0];
+}
+
+function openCase(type){
+
+let box=cases[type];
+
+if(coins<box.price){
+alert("Недостаточно монет! 🪙");
+return;
+}
+
+coins-=box.price;
+updateCoins();
+
+document.getElementById("modal").classList.add("show");
+
+document.getElementById("caseTitle").textContent=box.name;
+
+document.getElementById("result").classList.remove("show");
+
+let winner=randomItem(box.items);
+
+let list=[];
+
+for(let i=0;i<35;i++){
+list.push(
+box.items[Math.floor(Math.random()*box.items.length)]
+);
+}
+
+list[30]=winner;
+
+let area=document.getElementById("items");
+
+area.innerHTML=list.map(item=>`
+<div class="item">
+<b>${item[1]}</b>
+<small>${item[0]}</small>
+<em>🪙 ${item[2]}</em>
+</div>
+`).join("");
+
+area.style.transition="none";
+area.style.transform="translateX(0px)";
+
+setTimeout(()=>{
+
+let distance=-(30*140)+area.parentElement.offsetWidth/2-65;
+
+area.style.transition=
+"transform 5s cubic-bezier(.08,.7,.12,1)";
+
+area.style.transform=
+"translateX("+distance+"px)";
+
+},100);
+
+setTimeout(()=>{
+
+document.getElementById("winIcon").textContent=winner[1];
+
+document.getElementById("winName").textContent=winner[0];
+
+document.getElementById("winPrice").innerHTML=
+"Стоимость: 🪙 <b>"+winner[2]+"</b>";
+
+document.getElementById("result").classList.add("show");
+
+},5300);
+
+}
+
+function closeCase(){
+
+document.getElementById("modal").classList.remove("show");
+
+}
+
+updateCoins();
+
+</script>
+
+</body>
+</html>
